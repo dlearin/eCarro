@@ -86,6 +86,9 @@ function startNotifications(characteristic) {
   return characteristic.startNotifications().
       then(() => {
         log('Notifications started');
+        // Added line
+        characteristic.addEventListener('characteristicvaluechanged',
+            handleCharacteristicValueChanged);
       });
 }
 
@@ -141,8 +144,20 @@ function disconnect() {
     }
   }
 
-  characteristicCache = null;
+  // Added condition
+  if (characteristicCache) {
+    characteristicCache.removeEventListener('characteristicvaluechanged',
+        handleCharacteristicValueChanged);
+    characteristicCache = null;
+  }
+
   deviceCache = null;
+}
+
+// Data receiving
+function handleCharacteristicValueChanged(event) {
+  let value = new TextDecoder().decode(event.target.value);
+  log(value, 'in');
 }
 
 // Send data to the connected device
