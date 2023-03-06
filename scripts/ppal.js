@@ -160,6 +160,33 @@ function handleCharacteristicValueChanged(event) {
   log(value, 'in');
 }
 
+// Intermediate buffer for incoming data
+let readBuffer = '';
+
+// Data receiving
+function handleCharacteristicValueChanged(event) {
+  let value = new TextDecoder().decode(event.target.value);
+
+  for (let c of value) {
+    if (c === '\n') {
+      let data = readBuffer.trim();
+      readBuffer = '';
+
+      if (data) {
+        receive(data);
+      }
+    }
+    else {
+      readBuffer += c;
+    }
+  }
+}
+
+// Received data handling
+function receive(data) {
+  log(data, 'in');
+}
+
 // Send data to the connected device
 function send(data) {
   //
