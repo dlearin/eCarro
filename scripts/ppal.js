@@ -92,6 +92,8 @@ function startNotifications(characteristic) {
       });
 }
 
+characteristicCache = null;
+
 // Output to terminal
 function log(data, type = '') {
   terminalContainer.insertAdjacentHTML('beforeend',
